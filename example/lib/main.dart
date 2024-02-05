@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
                     permissions: {
                       TikTokPermissionType.userInfoBasic,
                     },
+                    redirectUri: 'https://example.com',
                   );
                   setState(() => loginResult = result.toString());
                 },
