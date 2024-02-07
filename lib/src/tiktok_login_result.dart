@@ -4,6 +4,7 @@ class TikTokLoginResult {
   const TikTokLoginResult({
     required this.status,
     this.authCode,
+    this.codeVerifier,
     this.state,
     this.grantedPermissions,
     this.errorCode,
@@ -11,6 +12,7 @@ class TikTokLoginResult {
   });
   final TikTokLoginStatus status;
   final String? authCode;
+  final String? codeVerifier;
   final String? state;
   final Set<TikTokPermissionType>? grantedPermissions;
   final String? errorCode;

@@ -72,7 +72,8 @@ public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
             code: String(authRequest.errorCode.rawValue),
             message: authRequest.errorDescription,
             details: nil
-          ))
+          )
+        )
       }
     }
   }
