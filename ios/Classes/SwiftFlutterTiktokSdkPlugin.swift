@@ -3,7 +3,6 @@ import TikTokOpenAuthSDK
 import UIKit
 
 public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
-  private var authRequest: TikTokAuthRequest?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -51,26 +50,25 @@ public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
       return
     }
 
-    let scopes = scope.split(separator: ",")
-    let scopesSet = Set<String>(scopes.map { String($0) })
-    let authRequest = TikTokAuthRequest(scopes: scopesSet, redirectURI: redirectURI)
+    let scopes = Set(scope.split(separator: ",").map(String.init))
+    let authRequest = TikTokAuthRequest(scopes: scopes, redirectURI: redirectURI)
     authRequest.isWebAuth = browserAuthEnabled
-    self.authRequest = authRequest
-    authRequest.send { [weak self] response in
-      guard let self = self, let authRequest = response as? TikTokAuthResponse else { return }
-      if authRequest.error == nil {
+
+    authRequest.send { response in
+      guard let authResponse = response as? TikTokAuthResponse else { return }
+      if authResponse.errorCode == .noError {
         let resultMap: [String: String?] = [
-          "authCode": authRequest.authCode,
-          "codeVerifier": self.authRequest?.pkce.codeVerifier,
+          "authCode": authResponse.authCode,
+          "codeVerifier": authRequest.pkce.codeVerifier,
           "state": authRequest.state,
-          "grantedPermissions": (authRequest.grantedPermissions)?.joined(separator: ","),
+          "grantedPermissions": (authResponse.grantedPermissions)?.joined(separator: ","),
         ]
         result(resultMap)
       } else {
         result(
           FlutterError(
-            code: String(authRequest.errorCode.rawValue),
-            message: authRequest.errorDescription,
+            code: String(authResponse.errorCode.rawValue),
+            message: authResponse.errorDescription,
             details: nil
           )
         )
