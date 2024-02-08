@@ -20,7 +20,7 @@ class TikTokLoginResult {
 
   @override
   String toString() {
-    return 'TikTokLoginResult{status: $status, authCode: $authCode, state: $state, grantedPermissions: $grantedPermissions, errorCode: $errorCode, errorMessage: $errorMessage}';
+    return 'TikTokLoginResult{status: $status, authCode: $authCode, codeVerifier: $codeVerifier, state: $state, grantedPermissions: $grantedPermissions, errorCode: $errorCode, errorMessage: $errorMessage}';
   }
 }
 
