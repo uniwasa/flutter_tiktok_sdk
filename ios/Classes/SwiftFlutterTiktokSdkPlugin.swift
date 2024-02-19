@@ -13,6 +13,7 @@ public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
   }
 
   private var result: FlutterResult?  // Does not work if defined as a method argument
+  private var codeVerifier: String?  // Does not work if defined as a method local variable
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     self.result = result
     switch call.method {
@@ -50,13 +51,14 @@ public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
     let scopes = Set(scope.split(separator: ",").map(String.init))
     let authRequest = TikTokAuthRequest(scopes: scopes, redirectURI: redirectURI)
     authRequest.isWebAuth = browserAuthEnabled
+    self.codeVerifier = authRequest.pkce.codeVerifier
 
     authRequest.send { response in
       guard let authResponse = response as? TikTokAuthResponse else { return }
       if authResponse.errorCode == .noError {
         let resultMap: [String: String?] = [
           "authCode": authResponse.authCode,
-          "codeVerifier": authRequest.pkce.codeVerifier,
+          "codeVerifier": self.codeVerifier,
           "state": authRequest.state,
           "grantedPermissions": (authResponse.grantedPermissions)?.joined(separator: ","),
         ]
