@@ -79,6 +79,7 @@ class TikTokSDK {
         status: status,
         errorCode: e.code,
         errorMessage: e.message,
+        errorDetails: e.details,
       );
     }
   }

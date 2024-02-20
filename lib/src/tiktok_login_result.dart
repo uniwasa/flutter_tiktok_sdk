@@ -9,6 +9,7 @@ class TikTokLoginResult {
     this.grantedPermissions,
     this.errorCode,
     this.errorMessage,
+    this.errorDetails,
   });
   final TikTokLoginStatus status;
   final String? authCode;
@@ -17,10 +18,11 @@ class TikTokLoginResult {
   final Set<TikTokPermissionType>? grantedPermissions;
   final String? errorCode;
   final String? errorMessage;
+  final String? errorDetails;
 
   @override
   String toString() {
-    return 'TikTokLoginResult{status: $status, authCode: $authCode, codeVerifier: $codeVerifier, state: $state, grantedPermissions: $grantedPermissions, errorCode: $errorCode, errorMessage: $errorMessage}';
+    return 'TikTokLoginResult{status: $status, authCode: $authCode, codeVerifier: $codeVerifier, state: $state, grantedPermissions: $grantedPermissions, errorCode: $errorCode, errorMessage: $errorMessage, errorDetails: $errorDetails}';
   }
 }
 

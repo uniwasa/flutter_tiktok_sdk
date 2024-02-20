@@ -127,7 +127,7 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         loginResult?.error(
           it.errorCode.toString(),
           it.errorMsg,
-          null,
+          it.authErrorDescription,
         )
       }
     }
