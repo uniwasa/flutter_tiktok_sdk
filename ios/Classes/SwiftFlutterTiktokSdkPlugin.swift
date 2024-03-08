@@ -12,59 +12,56 @@ public class SwiftFlutterTiktokSdkPlugin: NSObject, FlutterPlugin {
     registrar.addApplicationDelegate(instance)
   }
 
-  private var result: FlutterResult?  // Does not work if defined as a method argument
-  private var codeVerifier: String?  // Does not work if defined as a method local variable
+  private var authRequest: TikTokAuthRequest!  // Keep a reference to the auth request to avoid deallocation
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    self.result = result
     switch call.method {
     case "setup":
       result(nil)
     case "login":
-      login(call)
+      login(call, result: result)
     default:
       result(FlutterMethodNotImplemented)
       return
     }
   }
 
-  func login(_ call: FlutterMethodCall) {
+  func login(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     guard let args = call.arguments as? [String: Any] else {
-      self.result?(FlutterError.nilArgument)
+      result(FlutterError.nilArgument)
       return
     }
 
     guard let scope = args["scope"] as? String else {
-      self.result?(FlutterError.failedArgumentField("scope", type: String.self))
+      result(FlutterError.failedArgumentField("scope", type: String.self))
       return
     }
 
     guard let redirectURI = args["redirectUri"] as? String else {
-      self.result?(FlutterError.failedArgumentField("redirectURI", type: String.self))
+      result(FlutterError.failedArgumentField("redirectURI", type: String.self))
       return
     }
 
     guard let browserAuthEnabled = args["browserAuthEnabled"] as? Bool else {
-      self.result?(FlutterError.failedArgumentField("browserAuthEnabled", type: Bool.self))
+      result(FlutterError.failedArgumentField("browserAuthEnabled", type: Bool.self))
       return
     }
 
     let scopes = Set(scope.split(separator: ",").map(String.init))
-    let authRequest = TikTokAuthRequest(scopes: scopes, redirectURI: redirectURI)
+    authRequest = TikTokAuthRequest(scopes: scopes, redirectURI: redirectURI)
     authRequest.isWebAuth = browserAuthEnabled
-    self.codeVerifier = authRequest.pkce.codeVerifier
 
     authRequest.send { response in
       guard let authResponse = response as? TikTokAuthResponse else { return }
       if authResponse.errorCode == .noError {
         let resultMap: [String: String?] = [
           "authCode": authResponse.authCode,
-          "codeVerifier": self.codeVerifier,
-          "state": authRequest.state,
+          "codeVerifier": self.authRequest.pkce.codeVerifier,
+          "state": self.authRequest.state,
           "grantedPermissions": (authResponse.grantedPermissions)?.joined(separator: ","),
         ]
-        self.result?(resultMap)
+        result(resultMap)
       } else {
-        self.result?(
+        result(
           FlutterError(
             code: String(authResponse.errorCode.rawValue),
             message: authResponse.errorDescription,
