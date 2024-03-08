@@ -112,6 +112,9 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   override fun onNewIntent(intent: Intent): Boolean {
+    if (!::authApi.isInitialized) {
+      return false;
+    }
     authApi.getAuthResponseFromIntent(intent, redirectUrl = redirectUrl)?.let {
       val authCode = it.authCode
       if (authCode.isNotEmpty()) {
