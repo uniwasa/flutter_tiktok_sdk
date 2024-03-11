@@ -23,14 +23,14 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private lateinit var channel: MethodChannel
-  private lateinit var authApi: AuthApi
 
+  private var authApi: AuthApi? = null
   private var activity: Activity? = null
   private var activityPluginBinding: ActivityPluginBinding? = null
   private var loginResult: Result? = null
   private var clientKey: String? = null
-  private var codeVerifier: String = ""
-  private var redirectUrl: String = ""
+  private var codeVerifier: String? = null
+  private var redirectUrl: String? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.k9i/flutter_tiktok_sdk")
@@ -50,20 +50,42 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
           return
         }
 
-        clientKey = call.argument<String?>("clientKey")
+        clientKey = call.argument<String>("clientKey")
         authApi = AuthApi(activity = activity)
         result.success(null)
       }
       "login" -> {
-        val scope = call.argument<String>("scope") ?: ""
+        val scope = call.argument<String>("scope")
+        val redirectUrl = call.argument<String>("redirectUri")
         val state = call.argument<String>("state")
-        redirectUrl = call.argument<String>("redirectUri") ?: ""
         val browserAuthEnabled = call.argument<Boolean>("browserAuthEnabled")
+        val codeVerifier = PKCEUtils.generateCodeVerifier()
+        val clientKey = this.clientKey
 
-        codeVerifier = PKCEUtils.generateCodeVerifier()
+        if (clientKey == null) {
+          result.error(
+            "client_key_not_found",
+            "Client key is not found. Please call setup method first.",
+            null
+          )
+          return
+        }
+        if (scope == null || redirectUrl == null) {
+          result.error(
+            "invalid_parameters",
+            "Required parameters are missing. Please check the parameters and try again.",
+            null
+          )
+          return
+        }
+
+        // Store values for onNewIntent
+        this.redirectUrl = redirectUrl
+        this.codeVerifier = codeVerifier
+        this.loginResult = result
 
         val request = AuthRequest(
-          clientKey = clientKey ?: "",
+          clientKey = clientKey,
           scope = scope,
           redirectUri = redirectUrl,
           state = state,
@@ -72,8 +94,7 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         val authType =
           if (browserAuthEnabled == true) AuthApi.AuthMethod.ChromeTab else AuthApi.AuthMethod.TikTokApp
 
-        authApi.authorize(request, authType)
-        loginResult = result
+        authApi?.authorize(request, authType)
       }
       else -> result.notImplemented()
     }
@@ -112,10 +133,10 @@ class FlutterTiktokSdkPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
   }
 
   override fun onNewIntent(intent: Intent): Boolean {
-    if (!::authApi.isInitialized) {
-      return false;
-    }
-    authApi.getAuthResponseFromIntent(intent, redirectUrl = redirectUrl)?.let {
+    val redirectUrl = redirectUrl
+    redirectUrl ?: return true
+
+    authApi?.getAuthResponseFromIntent(intent, redirectUrl = redirectUrl)?.let {
       val authCode = it.authCode
       if (authCode.isNotEmpty()) {
         val resultMap = mapOf(
