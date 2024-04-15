@@ -33,6 +33,8 @@ class TikTokSDK {
   /// [permissionType] You must apply for permissions at the time of app registration.
   Future<TikTokLoginResult> login({
     required Set<TikTokPermissionType> permissions,
+    required String redirectUri,
+    bool? browserAuthEnabled = false,
     String? state,
   }) async {
     try {
@@ -42,6 +44,8 @@ class TikTokSDK {
         'login',
         <String, dynamic>{
           'scope': scope,
+          'redirectUri': redirectUri,
+          'browserAuthEnabled': browserAuthEnabled,
           'state': state,
         },
       );
@@ -57,6 +61,7 @@ class TikTokSDK {
         return TikTokLoginResult(
           status: TikTokLoginStatus.success,
           authCode: result["authCode"] as String,
+          codeVerifier: result["codeVerifier"] as String,
           state: result["state"] as String?,
           grantedPermissions: grantedPermissions,
         );
@@ -74,6 +79,7 @@ class TikTokSDK {
         status: status,
         errorCode: e.code,
         errorMessage: e.message,
+        errorDetails: e.details,
       );
     }
   }

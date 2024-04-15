@@ -16,8 +16,9 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
 
-  s.dependency 'TikTokOpenSDK', '~> 5.0.14'
-  s.platform = :ios, '9.3'
+  s.dependency 'TikTokOpenSDKCore', '~> 2.4.0'
+  s.dependency 'TikTokOpenAuthSDK', '~> 2.4.0'
+  s.platform = :ios, '12.0'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.

@@ -33,8 +33,10 @@ void main() {
   });
 
   test('login', () async {
-    final result = await TikTokSDK.instance
-        .login(permissions: TikTokPermissionType.values.toSet());
+    final result = await TikTokSDK.instance.login(
+      permissions: TikTokPermissionType.values.toSet(),
+      redirectUri: 'https://example.com',
+    );
     expect(result.status, TikTokLoginStatus.success);
     expect(result.state, null);
     expect(result.authCode, 'authCode');
