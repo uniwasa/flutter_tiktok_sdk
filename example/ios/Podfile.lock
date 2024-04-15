@@ -2,22 +2,16 @@ PODS:
   - Flutter (1.0.0)
   - flutter_tiktok_sdk (0.2.6):
     - Flutter
-    - TikTokOpenAuthSDK (~> 2.2.0)
-    - TikTokOpenSDKCore (~> 2.2.0)
-    - TikTokOpenShareSDK (~> 2.2.0)
-  - TikTokOpenAuthSDK (2.2.0):
-    - TikTokOpenAuthSDK/Auth (= 2.2.0)
-    - TikTokOpenSDKCore (= 2.2.0)
-  - TikTokOpenAuthSDK/Auth (2.2.0):
-    - TikTokOpenSDKCore (= 2.2.0)
-  - TikTokOpenSDKCore (2.2.0):
-    - TikTokOpenSDKCore/Core (= 2.2.0)
-  - TikTokOpenSDKCore/Core (2.2.0)
-  - TikTokOpenShareSDK (2.2.0):
-    - TikTokOpenSDKCore (= 2.2.0)
-    - TikTokOpenShareSDK/Share (= 2.2.0)
-  - TikTokOpenShareSDK/Share (2.2.0):
-    - TikTokOpenSDKCore (= 2.2.0)
+    - TikTokOpenAuthSDK (~> 2.4.0)
+    - TikTokOpenSDKCore (~> 2.4.0)
+  - TikTokOpenAuthSDK (2.4.0):
+    - TikTokOpenAuthSDK/Auth (= 2.4.0)
+    - TikTokOpenSDKCore (= 2.4.0)
+  - TikTokOpenAuthSDK/Auth (2.4.0):
+    - TikTokOpenSDKCore (= 2.4.0)
+  - TikTokOpenSDKCore (2.4.0):
+    - TikTokOpenSDKCore/Core (= 2.4.0)
+  - TikTokOpenSDKCore/Core (2.4.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -27,7 +21,6 @@ SPEC REPOS:
   trunk:
     - TikTokOpenAuthSDK
     - TikTokOpenSDKCore
-    - TikTokOpenShareSDK
 
 EXTERNAL SOURCES:
   Flutter:
@@ -37,11 +30,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_tiktok_sdk: 23d4349ffaaf0e89b9fb0b738362ee3de7beb8d1
-  TikTokOpenAuthSDK: 171f5768f0ee45f0afa668bfa6b4805e6553189f
-  TikTokOpenSDKCore: 7cf1784799d40cc33fb70d5c314603ae4f49ecb6
-  TikTokOpenShareSDK: 2612b9ff5ed93c6b3ef81a798ce803a838ec3fa8
+  flutter_tiktok_sdk: f51ee09d68551aa3cb2ff4189b98c3094cfa358b
+  TikTokOpenAuthSDK: d3c127356e6bc34737fee4312374b1399d03f88c
+  TikTokOpenSDKCore: 69ce7e163d66ba62ff1412f5acd8d4c34d2b64eb
 
-PODFILE CHECKSUM: abbeb5b4f57894637e65aa9e19c1e9eea50d5246
+PODFILE CHECKSUM: 8f3e72fe4debd9cb5a08703224c4763e08df2d62
 
 COCOAPODS: 1.14.3
